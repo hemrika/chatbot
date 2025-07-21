@@ -10,10 +10,10 @@ namespace FAQChatbot
         private readonly string _apiKey;
         private readonly HttpClient _httpClient;
 
-        public OpenAIService(string apiKey)
+        public OpenAIService(string apiKey, HttpMessageHandler? handler = null)
         {
             _apiKey = apiKey;
-            _httpClient = new HttpClient();
+            _httpClient = handler == null ? new HttpClient() : new HttpClient(handler);
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
         }
 
