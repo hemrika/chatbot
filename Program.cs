@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace FAQChatbot
 {
@@ -20,6 +21,8 @@ namespace FAQChatbot
             }
 
             var openAI = new OpenAIService(apiKey);
+            var logPath = config["Logging:ConversationFile"];
+            var logger = new ConversationLogger(logPath);
 
             Console.WriteLine("OpenAI FAQ Chatbot. Type your question (type 'exit' to quit):");
             while (true)
@@ -28,6 +31,7 @@ namespace FAQChatbot
                 if (question?.ToLower() == "exit") break;
                 var answer = openAI.Ask(question ?? "").GetAwaiter().GetResult();
                 Console.WriteLine("Bot: " + answer);
+                logger.Log(question ?? string.Empty, answer);
             }
         }
     }
